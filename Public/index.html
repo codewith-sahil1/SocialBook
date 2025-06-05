@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat App</title>
+  <style>
+    #company{
+      color:blue;
+      font-weight: bold;
+      font-style: oblique;
+    }
+    #profilevalue{
+      color:blue;
+      font-weight: bold;
+    }
+    #navbar{
+      background-color: blue;
+    }
+   #navbar a{
+    display:inline-block;
+    font-weight: bold;
+    font-style: normal;
+    color:white;
+    text-decoration: none;
+    padding:8px 12px;
+   }
+    #admindiv{
+      background-color: blue;
+    }
+   #admindiv a{
+    display:inline-block;
+    font-weight: bold;
+    font-style: normal;
+    color:white;
+    text-decoration: none;
+    padding:8px 12px;
+   }
+   #ans{
+    background-color: green;
+   }
+    .chat-container { max-width: 400px; margin: auto; background-color: green; }
+    ul { list-style: none; padding: 0; overflow-y: auto; height: 300px; border: 3px solid black; background-color:red; color:white;}
+    li { padding: 5px; }
+  </style>
+</head>
+<body>
+  <h1 id="company">Network</h1>
+ <div id="navbar">
+  <a href="/">Home</a>
+  <a href="/">Admin</a>
+</div>
+<div id="ans"><div class="chat-container">
+    <div class="chat-header">
+      Chat Room:-
+      <button id="changeusernamebtn">Change Username</button>
+    </div>
+    <ul id="message"></ul>
+    <form id="form" action="">
+      <input id="input" type="text" placeholder="type your message"/>
+      <button id="sendbtn">Send</button>
+    </form>
+  </div>
+</div>
+ 
+
+    <h1 id="profilevalue">Profile</h1>
+    <div id="admindiv">
+      <a href="https://www.instagram.com/_iammras/?utm_source=ig_web_button_share_sheet">Instagram</a>
+      <a href="">Facebook</a>
+      <a href="https://www.linkedin.com/in/%F0%9D%99%88%F0%9D%99%96%F0%9D%99%AE%F0%9D%99%96%F0%9D%99%A3%F0%9D%99%A0-%F0%9D%99%8D%F0%9D%99%96%F0%9D%99%9F-%F0%9D%99%8E%F0%9D%99%A7%F0%9D%99%9E%F0%9D%99%AB%F0%9D%99%96%F0%9D%99%A8%F0%9D%99%A9%F0%9D%99%96%F0%9D%99%AB%F0%9D%99%96-b7a389281/">Linkdin</a>
+      <a href="https://leetcode.com/u/cipherstrom01/">Leetcode</a>
+      <a href="https://www.hackerrank.com/profile/cipherstorm01">Hackerrank</a>
+      <a href="https://www.codechef.com/users/cipherstorm01">Codechef</a>
+      <a href="https://www.geeksforgeeks.org/user/cipherstrom01/">GeekforGeeks</a>
+    </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    let username = localStorage.getItem('username');
+    if (!username) {
+      username = prompt("Enter your username");
+      if (!username) {
+        username = "mrs-special";
+      }
+      localStorage.setItem('username', username);
+    }
+    socket.emit("set username", username);
+
+    const form = document.querySelector('form');
+    const input = document.querySelector('input');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = "";
+      }
+    });
+
+    socket.on('chat message', function(data) {
+      const item = document.createElement('li');
+      let sender = (data.username === username) ? 'You' : data.username;
+      item.innerHTML = `<strong>${sender}:</strong> ${data.text}`;
+      message.appendChild(item);
+      message.scrollTop = message.scrollHeight;
+    });
+
+    document.getElementById('changeusernamebtn').addEventListener('click', () => {
+      let newusername = prompt("Enter your new username");
+      if (newusername) {
+        localStorage.setItem('username', newusername);
+        socket.emit('set username', newusername);
+        username = newusername;
+        alert("Username updated to " + newusername);
+      }
+    });
+  </script>
+</body>
+</html>
