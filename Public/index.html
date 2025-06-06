@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <title>Chat App</title>
   <style>
+    #header{
+       color:blue;
+      font-weight: bold;
+      font-style: oblique;
+    }
     #company{
       color:blue;
       font-weight: bold;
@@ -44,11 +49,14 @@
   </style>
 </head>
 <body>
-  <h1 id="company">Network</h1>
+ <div id="header">  <h1 id="company">SocialBook</h1>
+  <p>By Mayank Raj Srivastava</p></div>
  <div id="navbar">
   <a href="/">Home</a>
   <a href="/">Admin</a>
 </div>
+<button onclick="join('room1')">Dating-Room</button>
+<button onclick="join('room2')">NonDating-Room</button>
 <div id="ans"><div class="chat-container">
     <div class="chat-header">
       Chat Room:-
@@ -59,6 +67,8 @@
       <input id="input" type="text" placeholder="type your message"/>
       <button id="sendbtn">Send</button>
     </form>
+    <input type="file" id="fileinput"/>
+    <button id="sendfile">Send File</button>
   </div>
 </div>
  
@@ -77,6 +87,12 @@
   <script>
     const socket = io();
     let username = localStorage.getItem('username');
+    let currentroom="";
+function join(roomName){
+   currentroom=roomName;
+    socket.emit('joinroom',roomName);
+  
+}
     if (!username) {
       username = prompt("Enter your username");
       if (!username) {
@@ -89,22 +105,47 @@
     const form = document.querySelector('form');
     const input = document.querySelector('input');
     const message = document.getElementById('message');
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      if (input.value) {
-        socket.emit('chat message', input.value);
-        input.value = "";
-      }
+    const fileinput=document.getElementById("fileinput");
+    const sendfile=document.getElementById("sendfile");
+   
+  form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  if(!currentroom){
+    alert("⚠️ please join a room first")
+  }
+  if (input.value) {
+    socket.emit('chat message', currentroom, {
+      username: username,
+      text: input.value
     });
+    input.value = "";
+  }
+});
 
     socket.on('chat message', function(data) {
-      const item = document.createElement('li');
-      let sender = (data.username === username) ? 'You' : data.username;
-      item.innerHTML = `<strong>${sender}:</strong> ${data.text}`;
-      message.appendChild(item);
-      message.scrollTop = message.scrollHeight;
-    });
+  const item = document.createElement('li');
+  let sender = (data.username === username) ? 'You' : data.username;
+  
+  if (data.text) {
+    item.innerHTML = `<strong>${sender}:</strong> ${data.text}`;
+  } 
+  else if (data.file) {
+    // show download link
+    item.innerHTML = `<strong>${sender}:</strong> <a href="${data.file.data}" download="${data.file.name}">Download ${data.file.name}</a>`;
+    
+    // if image, display preview
+    if (data.file.data.startsWith("data:image")) {
+      const img = document.createElement("img");
+      img.src = data.file.data;
+      img.style.maxWidth = "200px";
+      item.appendChild(document.createElement("br"));
+      item.appendChild(img);
+    }
+  }
+  
+  message.appendChild(item);
+  message.scrollTop = message.scrollHeight;
+});
 
     document.getElementById('changeusernamebtn').addEventListener('click', () => {
       let newusername = prompt("Enter your new username");
@@ -115,6 +156,27 @@
         alert("Username updated to " + newusername);
       }
     });
+   sendfile.addEventListener("click", () => {
+    if(!currentroom){
+      alert("⚠️ please join a room first");
+    }
+  const file = fileinput.files[0];
+  if (!file) { return; }
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const filedata = event.target.result;
+    socket.emit("chat message",currentroom, {
+      username: username,
+      file: {
+        name: file.name,
+        data: filedata
+      }
+    });
+  };
+  reader.readAsDataURL(file);
+});
+
+
   </script>
 </body>
 </html>

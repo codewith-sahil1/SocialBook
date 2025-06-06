@@ -14,15 +14,43 @@ io.on('connection', (socket) => {
 
   socket.on('set username', (username) => {
     socket.username = username;
-    console.log(`${username} has joined the chat`);
+  });
+  socket.on('joinroom',(roomName)=>{
+    for(let room of socket.rooms){
+      if(room!=socket.id){
+        socket.leave(room);
+      }
+    }
+     socket.join(roomName);
+     console.log(`user joined ${roomName}`);
+     io.to(roomName).emit('message',`welcome to the ${roomName}`);
   });
 
-  socket.on('chat message', (message) => {
-    console.log(`Message from ${socket.username}: ${message}`);
-    io.emit('chat message', {
-      username: socket.username,
-      text: message
-    });
+  socket.on('chat message',(roomName,message) => {
+    // If message is a string (simple text message)
+    if (typeof message === 'string') {
+      console.log(`Text message from ${socket.username}: ${message}`);
+      io.to(roomName).emit('chat message', {
+        username: socket.username,
+        text: message
+      });
+    }
+    // If message is an object with text property (text message wrapped in object)
+    else if (typeof message === 'object' && message.text) {
+      console.log(`Text message (object) from ${socket.username}: ${message.text}`);
+      io.to(roomName).emit('chat message', {
+        username: socket.username,
+        text: message.text
+      });
+    }
+    // If message is an object with file property (file message)
+    else if (typeof message === 'object' && message.file) {
+      console.log(`File message from ${message.username || socket.username}: ${message.file.name}`);
+      io.to(roomName).emit('chat message', {
+        username: message.username || socket.username,
+        file: message.file
+      });
+    }
   });
 });
 
