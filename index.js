@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.static(path.resolve("./public")));
+
 
 io.on('connection', (socket) => {
   console.log('A new user has connected');
@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
 });
 
 app.get("", (req, res) => {
-  return res.sendFile(path.resolve("./public/index.html"));
+  return res.sendFile(path.resolve("./index.html"));
 });
 
 //server.listen(8000, () => console.log(`🚀 Server started at: http://localhost:8000`));
