@@ -1,182 +1,342 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Chat App</title>
   <style>
-    #header{
-       color:blue;
+    /* General Styling */
+    #header {
+      color: blue;
+      font-weight: bold;
+      font-style: oblique;
+      text-align: center;
+    }
+    #company {
+      color: blue;
       font-weight: bold;
       font-style: oblique;
     }
-    #company{
-      color:blue;
+    #profilevalue {
+      color: blue;
       font-weight: bold;
-      font-style: oblique;
+      text-align: center;
     }
-    #profilevalue{
-      color:blue;
+    #navbar {
+      background-color: blue;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    #navbar a {
+      display: inline-block;
       font-weight: bold;
+      color: white;
+      text-decoration: none;
+      padding: 8px 12px;
     }
-    #navbar{
+    #admindiv {
       background-color: blue;
+      text-align: center;
+      padding: 10px;
     }
-   #navbar a{
-    display:inline-block;
-    font-weight: bold;
-    font-style: normal;
-    color:white;
-    text-decoration: none;
-    padding:8px 12px;
-   }
-    #admindiv{
+    #admindiv a {
+      display: inline-block;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+      padding: 8px 12px;
+    }
+    #ans {
+      background-color: green;
+      padding: 10px;
+    }
+    .chat-container {
+      max-width: 400px;
+      margin: 20px auto;
+      background-color: green;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .chat-header {
+      color: white;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      overflow-y: auto;
+      height: 300px;
+      border: 3px solid black;
+      background-color: red;
+      color: white;
+      border-radius: 8px;
+    }
+    li {
+      padding: 5px;
+    }
+    button,
+    input[type="text"],
+    input[type="file"] {
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: none;
+    }
+    input[type="text"] {
+      width: calc(100% - 110px);
+    }
+    #sendbtn,
+    #sendfile {
       background-color: blue;
+      color: white;
     }
-   #admindiv a{
-    display:inline-block;
-    font-weight: bold;
-    font-style: normal;
-    color:white;
-    text-decoration: none;
-    padding:8px 12px;
-   }
-   #ans{
-    background-color: green;
-   }
-    .chat-container { max-width: 400px; margin: auto; background-color: green; }
-    ul { list-style: none; padding: 0; overflow-y: auto; height: 300px; border: 3px solid black; background-color:red; color:white;}
-    li { padding: 5px; }
+    #changeusernamebtn {
+      background-color: darkblue;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    img {
+      margin-top: 5px;
+      max-width: 100%;
+      border-radius: 5px;
+    }
+
+    /* Username input container styling */
+    #usernameContainer {
+      text-align: center;
+      margin: 15px 0;
+    }
+    #usernameInput {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #aaa;
+      width: 200px;
+    }
+    #setusernamebtn {
+      padding: 8px 12px;
+      border-radius: 5px;
+      background-color: darkblue;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* 🔥 Responsive Styling */
+
+    @media (max-width: 768px) {
+      .chat-container {
+        max-width: 95%;
+      }
+      #navbar a {
+        padding: 6px 8px;
+        font-size: 14px;
+      }
+      #admindiv a {
+        padding: 6px 8px;
+        font-size: 14px;
+      }
+      input[type="text"] {
+        width: calc(100% - 100px);
+      }
+      ul {
+        height: 250px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #header h1 {
+        font-size: 22px;
+      }
+      #navbar a,
+      #admindiv a {
+        display: block;
+        margin: 4px 0;
+        padding: 8px;
+      }
+      button,
+      input[type="text"],
+      input[type="file"] {
+        width: 100%;
+        margin: 5px 0;
+      }
+      #sendbtn,
+      #sendfile {
+        width: 100%;
+        margin-top: 5px;
+      }
+      ul {
+        height: 200px;
+      }
+    }
   </style>
 </head>
 <body>
- <div id="header">  <h1 id="company">SocialBook</h1>
-  <p>By Mayank Raj Srivastava</p></div>
- <div id="navbar">
-  <a href="/">Home</a>
-  <a href="/">Admin</a>
-</div>
-<button onclick="join('room1')">Dating-Room</button>
-<button onclick="join('room2')">NonDating-Room</button>
-<div id="ans"><div class="chat-container">
-    <div class="chat-header">
-      Chat Room:-
-      <button id="changeusernamebtn">Change Username</button>
-    </div>
-    <ul id="message"></ul>
-    <form id="form" action="">
-      <input id="input" type="text" placeholder="type your message"/>
-      <button id="sendbtn">Send</button>
-    </form>
-    <input type="file" id="fileinput"/>
-    <button id="sendfile">Send File</button>
+  <div id="header">
+    <h1 id="company">SocialBook</h1>
+    <p>By Mayank Raj Srivastava</p>
   </div>
-</div>
- 
 
-    <h1 id="profilevalue">Profile</h1>
-    <div id="admindiv">
-      <a href="https://www.instagram.com/_iammras/?utm_source=ig_web_button_share_sheet">Instagram</a>
-      <a href="">Facebook</a>
-      <a href="https://www.linkedin.com/in/%F0%9D%99%88%F0%9D%99%96%F0%9D%99%AE%F0%9D%99%96%F0%9D%99%A3%F0%9D%99%A0-%F0%9D%99%8D%F0%9D%99%96%F0%9D%99%9F-%F0%9D%99%8E%F0%9D%99%A7%F0%9D%99%9E%F0%9D%99%AB%F0%9D%99%96%F0%9D%99%A8%F0%9D%99%A9%F0%9D%99%96%F0%9D%99%AB%F0%9D%99%96-b7a389281/">Linkdin</a>
-      <a href="https://leetcode.com/u/cipherstrom01/">Leetcode</a>
-      <a href="https://www.hackerrank.com/profile/cipherstorm01">Hackerrank</a>
-      <a href="https://www.codechef.com/users/cipherstorm01">Codechef</a>
-      <a href="https://www.geeksforgeeks.org/user/cipherstrom01/">GeekforGeeks</a>
+  <div id="navbar">
+    <a href="/">Home</a>
+    <a href="/">Admin</a>
+  </div>
+
+  <!-- Room buttons -->
+  <div style="text-align:center; margin: 10px 0;">
+    <button onclick="join('room1')">Dating-Room</button>
+    <button onclick="join('room2')">NonDating-Room</button>
+  </div>
+
+  <!-- Username input and set button -->
+  <div id="usernameContainer">
+    <input
+      type="text"
+      id="usernameInput"
+      placeholder="Enter your username"
+      autocomplete="off"
+    />
+    <button id="setusernamebtn">Set Username</button>
+  </div>
+
+  <div id="ans">
+    <div class="chat-container">
+      <div class="chat-header">
+        Chat Room:-
+        <button id="changeusernamebtn">Change Username</button>
+      </div>
+      <ul id="message"></ul>
+      <form id="form" action="">
+        <input id="input" type="text" placeholder="type your message" autocomplete="off" />
+        <button id="sendbtn">Send</button>
+      </form>
+      <input type="file" id="fileinput" />
+      <button id="sendfile">Send File</button>
     </div>
+  </div>
+
+  <h1 id="profilevalue">Profile</h1>
+  <div id="admindiv">
+    <a href="https://www.instagram.com/_iammras/?utm_source=ig_web_button_share_sheet">Instagram</a>
+    <a href="">Facebook</a>
+    <a href="https://www.linkedin.com/in/%F0%9D%99%88%F0%9D%99%96%F0%9D%99%AE%F0%9D%99%96%F0%9D%99%A3%F0%9D%99%A0-%F0%9D%99%8D%F0%9D%99%96%F0%9D%99%9F-%F0%9D%99%8E%F0%9D%99%A7%F0%9D%99%9E%F0%9D%99%AB%F0%9D%99%96%F0%9D%99%A8%F0%9D%99%A9%F0%9D%99%96%F0%9D%99%AB%F0%9D%99%96-b7a389281/">LinkedIn</a>
+    <a href="https://leetcode.com/u/cipherstrom01/">LeetCode</a>
+    <a href="https://www.hackerrank.com/profile/cipherstorm01">HackerRank</a>
+    <a href="https://www.codechef.com/users/cipherstorm01">CodeChef</a>
+    <a href="https://www.geeksforgeeks.org/user/cipherstrom01/">GeeksforGeeks</a>
+  </div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
-    let username = localStorage.getItem('username');
-    let currentroom="";
-function join(roomName){
-   currentroom=roomName;
-    socket.emit('joinroom',roomName);
-  
-}
-    if (!username) {
-      username = prompt("Enter your username");
-      if (!username) {
-        username = "mrs-special";
+
+    let usernameInput = document.getElementById("usernameInput");
+    let setUsernameBtn = document.getElementById("setusernamebtn");
+    let changeUsernameBtn = document.getElementById("changeusernamebtn");
+    let currentroom = "";
+
+    // Load saved username from localStorage, if any
+    let username = localStorage.getItem("username") || "";
+    usernameInput.value = username;
+
+    // If username exists, send to server
+    if (username) {
+      socket.emit("set username", username);
+    }
+
+    function join(roomName) {
+      currentroom = roomName;
+      socket.emit("joinroom", roomName);
+    }
+
+    setUsernameBtn.addEventListener("click", () => {
+      const newUsername = usernameInput.value.trim();
+      if (!newUsername) {
+        alert("Please enter a valid username.");
+        return;
       }
-      localStorage.setItem('username', username);
-    }
-    socket.emit("set username", username);
-
-    const form = document.querySelector('form');
-    const input = document.querySelector('input');
-    const message = document.getElementById('message');
-    const fileinput=document.getElementById("fileinput");
-    const sendfile=document.getElementById("sendfile");
-   
-  form.addEventListener('submit', function(e) {
-  e.preventDefault();
-  if(!currentroom){
-    alert("⚠️ please join a room first")
-  }
-  if (input.value) {
-    socket.emit('chat message', currentroom, {
-      username: username,
-      text: input.value
+      username = newUsername;
+      localStorage.setItem("username", username);
+      socket.emit("set username", username);
+      alert(`Username set to: ${username}`);
     });
-    input.value = "";
-  }
-});
 
-    socket.on('chat message', function(data) {
-  const item = document.createElement('li');
-  let sender = (data.username === username) ? 'You' : data.username;
-  
-  if (data.text) {
-    item.innerHTML = `<strong>${sender}:</strong> ${data.text}`;
-  } 
-  else if (data.file) {
-    // show download link
-    item.innerHTML = `<strong>${sender}:</strong> <a href="${data.file.data}" download="${data.file.name}">Download ${data.file.name}</a>`;
-    
-    // if image, display preview
-    if (data.file.data.startsWith("data:image")) {
-      const img = document.createElement("img");
-      img.src = data.file.data;
-      img.style.maxWidth = "200px";
-      item.appendChild(document.createElement("br"));
-      item.appendChild(img);
-    }
-  }
-  
-  message.appendChild(item);
-  message.scrollTop = message.scrollHeight;
-});
+    changeUsernameBtn.addEventListener("click", () => {
+      const newUsername = usernameInput.value.trim();
+      if (!newUsername) {
+        alert("Please enter a valid username in the input box.");
+        return;
+      }
+      username = newUsername;
+      localStorage.setItem("username", username);
+      socket.emit("set username", username);
+      alert(`Username updated to ${username}`);
+    });
 
-    document.getElementById('changeusernamebtn').addEventListener('click', () => {
-      let newusername = prompt("Enter your new username");
-      if (newusername) {
-        localStorage.setItem('username', newusername);
-        socket.emit('set username', newusername);
-        username = newusername;
-        alert("Username updated to " + newusername);
+    const form = document.querySelector("form");
+    const input = document.getElementById("input");
+    const message = document.getElementById("message");
+    const fileinput = document.getElementById("fileinput");
+    const sendfile = document.getElementById("sendfile");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!currentroom) {
+        alert("⚠️ Please join a room first");
+        return;
+      }
+      if (input.value) {
+        socket.emit("chat message", currentroom, {
+          username: username,
+          text: input.value,
+        });
+        input.value = "";
       }
     });
-   sendfile.addEventListener("click", () => {
-    if(!currentroom){
-      alert("⚠️ please join a room first");
-    }
-  const file = fileinput.files[0];
-  if (!file) { return; }
-  const reader = new FileReader();
-  reader.onload = function(event) {
-    const filedata = event.target.result;
-    socket.emit("chat message",currentroom, {
-      username: username,
-      file: {
-        name: file.name,
-        data: filedata
+
+    socket.on("chat message", function (data) {
+      const item = document.createElement("li");
+      let sender = data.username === username ? "You" : data.username;
+
+      if (data.text) {
+        item.innerHTML = `<strong>${sender}:</strong> ${data.text}`;
+      } else if (data.file) {
+        item.innerHTML = `<strong>${sender}:</strong> <a href="${data.file.data}" download="${data.file.name}">Download ${data.file.name}</a>`;
+        if (data.file.data.startsWith("data:image")) {
+          const img = document.createElement("img");
+          img.src = data.file.data;
+          item.appendChild(document.createElement("br"));
+          item.appendChild(img);
+        }
       }
+
+      message.appendChild(item);
+      message.scrollTop = message.scrollHeight;
     });
-  };
-  reader.readAsDataURL(file);
-});
 
-
+    sendfile.addEventListener("click", () => {
+      if (!currentroom) {
+        alert("⚠️ Please join a room first");
+        return;
+      }
+      const file = fileinput.files[0];
+      if (!file) {
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const filedata = event.target.result;
+        socket.emit("chat message", currentroom, {
+          username: username,
+          file: {
+            name: file.name,
+            data: filedata,
+          },
+        });
+      };
+      reader.readAsDataURL(file);
+    });
   </script>
 </body>
 </html>
